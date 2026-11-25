@@ -1,6 +1,9 @@
 # Savings Tracker
 # Stores members as a list of dictionaries.
 
+from re import search
+
+
 members = []          # list of dictionaries, one per member
 member_ids = set()    # set of IDs, used to prevent duplicates
 
@@ -47,6 +50,43 @@ def view_all_members():
               f"Savings: {member['contributions']:.2f} | "
               f"Loan: {member['loan']:.2f}")
 
+# Search helper function to find a member by ID
+def find_member_by_id(member_id):
+    """Return the member dictionary with the given ID, or None if not found."""
+    for member in members:
+        if member["id"] == member_id:
+            return member
+    return None
+
+
+record_contribution_or_loan = None  # Placeholder for future implementation
+def record_transaction(): 
+    """Add a contribution or a loan to an existing member."""
+    if not members:
+        print("No members yet. Please add a member first.")
+        return
+
+    member_id = input("Enter member ID: ").strip()
+    member = find_member_by_id(member_id)
+    if member is None:
+        print("Member not found.")
+        return
+
+    print("1. Record a contribution")
+    print("2. Record a loan")
+    choice = input("Enter your choice (1 or 2): ").strip()
+    if choice == "1":
+        amount = get_positive_number("Enter contribution amount (ksh): ")
+        member["contributions"] += amount
+        print(f"Contribution of {amount:.2f} recorded for {member['name']}.")
+    elif choice == "2":
+        amount = get_positive_number("Enter loan amount (ksh): ")
+        member["loan"] += amount
+        print(f"Loan of {amount:.2f} recorded for {member['name']}.")
+
+    else:
+        print("Invalid choice. Please select 1 or 2.")
+        
 
 def show_menu():
     print("\n--- Savings Tracker ---")
@@ -67,6 +107,15 @@ def main():
 
         if choice == "1":
             add_member()
+        elif choice == "3":
+            member_id = input("Enter member ID: ").strip()
+            member = find_member_by_id(member_id)
+            if member:
+                print(f"ID: {member['id']} | {member['name']} | "
+                      f"Savings: {member['contributions']:.2f} | "
+                      f"Loan: {member['loan']:.2f}")
+            else:
+                print("Member not found.")
         elif choice == "4":
             view_all_members()
         elif choice == "8":
