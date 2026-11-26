@@ -87,6 +87,18 @@ def record_transaction():
     else:
         print("Invalid choice. Please select 1 or 2.")
         
+# view one member 
+def view_one_member():
+    """Search by ID and display one member."""
+    member_id = input("Enter member ID").strip()
+    member = find_member_by_id(member_id)
+
+    if member is None:
+        print("Member not found.")
+    else:
+        print(f"ID: {member['id']} | {member['name']} | "
+              f"Savings: {member['contributions']:.2f} | "
+              f"Loan: {member['loan']:.2f}")
 
 def show_menu():
     print("\n--- Savings Tracker ---")
