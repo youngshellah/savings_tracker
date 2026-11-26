@@ -105,7 +105,7 @@ def view_one_member():
 def calculate_summary():  
     """Show total savings, average per member, and total loans."""
     if not members:
-        print("No members yet, nthing to calculate")
+        print("No members yet, nothing to calculate.")
         return
 
     total_savings = 0.0
@@ -190,11 +190,13 @@ def main():
             calculate_summary()
         elif choice == "6":
             find_extreme()
+        elif choice == "7":
+            remove_member()
         elif choice == "8":
             print("Goodbye!")
             break
         else:
-            print("Not built yet or invalid choice.")
+            print("Invalid choice. Please select a number from 1 to 8.")
 
 
 main()
