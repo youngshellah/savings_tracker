@@ -120,7 +120,7 @@ def calculate_summary():
     print(f"Total loans: {total_loans:.2f}")
 
 
-# Highest r lowest contributor function placeholder 
+# Highest or lowest contributor function placeholder 
 def find_extreme():
     """Find the member with the highest or lowest contribution."""
     if not members:
@@ -142,6 +142,24 @@ def find_extreme():
               f"with {lowest_member['contributions']:.2f}")
     else:
         print("Invalid choice. Please select 1 or 2.")
+
+
+# Remove member function placeholder 
+def remove_member():
+    """Remove member from both the list and ID set."""
+    if not members:
+        print("No members yet.")
+        return
+
+    member_id = input("Enter member ID to remove: ").strip()
+    member = find_member_by_id(member_id)
+    if member is None:
+        print("Member not found.")
+        return
+
+    members.remove(member)
+    member_ids.remove(member_id)
+    print(f"Member {member['name']} removed successfully.")      
 
 def show_menu():
     print("\n--- Savings Tracker ---")
