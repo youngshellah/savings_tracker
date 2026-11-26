@@ -119,15 +119,10 @@ def main():
 
         if choice == "1":
             add_member()
+        elif choice == "2":
+            record_transaction()
         elif choice == "3":
-            member_id = input("Enter member ID: ").strip()
-            member = find_member_by_id(member_id)
-            if member:
-                print(f"ID: {member['id']} | {member['name']} | "
-                      f"Savings: {member['contributions']:.2f} | "
-                      f"Loan: {member['loan']:.2f}")
-            else:
-                print("Member not found.")
+            view_one_member()
         elif choice == "4":
             view_all_members()
         elif choice == "8":
