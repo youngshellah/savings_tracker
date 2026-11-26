@@ -100,6 +100,49 @@ def view_one_member():
               f"Savings: {member['contributions']:.2f} | "
               f"Loan: {member['loan']:.2f}")
 
+
+#  Group total and average function placeholder 
+def calculate_summary():  
+    """Show total savings, average per member, and total loans."""
+    if not members:
+        print("No members yet, nthing to calculate")
+        return
+
+    total_savings = 0.0
+    total_loans = 0.0
+    for member in members:
+        total_savings += member["contributions"]
+        total_loans += member["loan"]
+    average = total_savings / len(members)
+    print(f"Members: {len(members)}")
+    print(f"Total savings: {total_savings:.2f}")
+    print(f"Average savings per member: {average:.2f}")
+    print(f"Total loans: {total_loans:.2f}")
+
+
+# Highest r lowest contributor function placeholder 
+def find_extreme():
+    """Find the member with the highest or lowest contribution."""
+    if not members:
+        print("No members yet.")
+        return
+
+    print("1. Find highest contributor")
+    print("2. Find lowest contributor")
+    choice = input("Enter your choice (1 or 2): ").strip()
+
+    if choice == "1":
+        #key tellls max() to use the contributions value for comparison
+        highest_member = max(members, key=lambda m: m["contributions"])
+        print(f"Highest contributor: {highest_member['name']} "
+              f"with {highest_member['contributions']:.2f}")
+    elif choice == "2":
+        lowest_member = min(members, key=lambda m: m["contributions"])
+        print(f"Lowest contributor: {lowest_member['name']} "
+              f"with {lowest_member['contributions']:.2f}")
+    else:
+        print("Invalid choice. Please select 1 or 2.")
+
 def show_menu():
     print("\n--- Savings Tracker ---")
     print("1. Add a member")
@@ -125,6 +168,10 @@ def main():
             view_one_member()
         elif choice == "4":
             view_all_members()
+        elif choice == "5":
+            calculate_summary()
+        elif choice == "6":
+            find_extreme()
         elif choice == "8":
             print("Goodbye!")
             break
