@@ -1,9 +1,11 @@
 # Savings Tracker
 # Stores members as a list of dictionaries.
 
-from re import search
+import json
+import os
 
 
+DATA_FILE = os.path.join(os.path.dirname(__file__), "savings_data.json")
 members = []          # list of dictionaries, one per member
 member_ids = set()    # set of IDs, used to prevent duplicates
 
@@ -57,6 +59,25 @@ def find_member_by_id(member_id):
         if member["id"] == member_id:
             return member
     return None
+
+# json
+def save_data():
+    """write all members to the json file."""
+    with open(DATA_FILE, "w") as file:
+        json.dump(members, file, indent=2)
+
+def load_data():
+    """Read mebers from the file if it exists."""
+    if not os.path.exists(DATA_FILE):
+        return
+    try:
+        with open(DATA_FILE) as file:
+            saved = json.load(file)
+            members.extend(saved)
+            for member in saved:
+                member_ids.add(member["id"]) #rebuild the set
+    except (json.JSONDecodeError, KeyError):
+        print("Could not read saved data. Starting empty.")       
 
 
 record_contribution_or_loan = None  # Placeholder for future implementation
@@ -159,7 +180,33 @@ def remove_member():
 
     members.remove(member)
     member_ids.remove(member_id)
-    print(f"Member {member['name']} removed successfully.")      
+    print(f"Member {member['name']} removed successfully.")
+
+# loan repayment
+def repay_loan():
+    """Reduce a members loan balance.""" 
+    if not members:
+        print("No members yet.")
+        return
+
+    member_id = input("Enter member ID:").strip()
+    member = find_member_by_id(member_id)
+
+
+    if member is None:
+        print("Member not found.")
+    elif member["loan"] == 0:
+        print(f"{member['name']} has no outstanding loan.")
+    else: 
+        print(f"{member['name']} has an outstanding loan of {member['loan']:.2f}.") 
+        amount= get_positive_number("Enter repayment amount (ksh): ")
+        if amount > member["loan"]:
+            print(f"Repayment exceeds outstanding loan. Reducing loan to 0.")
+            member["loan"] = 0
+        else:
+            member["loan"] -= amount
+            print(f"Repayment of {amount:.2f} recorded for {member['name']}. "
+                  f"Remaining loan: {member['loan']:.2f}")    
 
 def show_menu():
     print("\n--- Savings Tracker ---")
@@ -170,13 +217,15 @@ def show_menu():
     print("5. Calculate group total and average")
     print("6. Find highest or lowest contributor")
     print("7. Remove a member")
-    print("8. Exit")
+    print("8. Repay a loan")
+    print("9. Exit")
 
 
 def main():
+    load_data()  # restore saved members at startup
     while True:
         show_menu()
-        choice = input("Enter your choice (1-8): ").strip()
+        choice = input("Enter your choice (1-9): ").strip()
 
         if choice == "1":
             add_member()
@@ -193,10 +242,18 @@ def main():
         elif choice == "7":
             remove_member()
         elif choice == "8":
+            repay_loan()
+        elif choice == "9":
+            save_data()
             print("Goodbye!")
             break
         else:
-            print("Invalid choice. Please select a number from 1 to 8.")
+            print("Invalid choice. Enter a number from 1 to 9.")
+            continue
+
+        save_data()  # save after every action
 
 
-main()
+if __name__ == "__main__":
+    main()
+
